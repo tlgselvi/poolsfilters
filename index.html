@@ -386,5 +386,69 @@ Swimming Pool Filter
 
 </tr></table></td></tr></table>
 
+<script>
+// Smooth scrolling for navigation links
+document.addEventListener('DOMContentLoaded', function() {
+    // Add click handlers for navigation links
+    const navLinks = document.querySelectorAll('a[href^="#"]');
+    navLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const targetId = this.getAttribute('href').substring(1);
+            const targetElement = document.getElementById(targetId);
+            
+            if (targetElement) {
+                targetElement.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            } else {
+                // If target doesn't exist, show alert
+                alert('Bu sayfa henüz hazırlanmamış. Yakında eklenecek!');
+            }
+        });
+    });
+    
+    // Add hover effects for product images
+    const productImages = document.querySelectorAll('img[src*=".jpg"]');
+    productImages.forEach(img => {
+        img.style.transition = 'transform 0.3s ease';
+        img.addEventListener('mouseenter', function() {
+            this.style.transform = 'scale(1.05)';
+        });
+        img.addEventListener('mouseleave', function() {
+            this.style.transform = 'scale(1)';
+        });
+    });
+    
+    // Add click handlers for external links
+    const externalLinks = document.querySelectorAll('a[href^="http"]');
+    externalLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            // Let external links open normally
+            console.log('External link clicked:', this.href);
+        });
+    });
+    
+    // Add interactive effects for tables
+    const tables = document.querySelectorAll('table');
+    tables.forEach(table => {
+        table.style.transition = 'box-shadow 0.3s ease';
+        table.addEventListener('mouseenter', function() {
+            this.style.boxShadow = '0 2px 8px rgba(0,0,0,0.1)';
+        });
+        table.addEventListener('mouseleave', function() {
+            this.style.boxShadow = 'none';
+        });
+    });
+    
+    // Add loading animation
+    document.body.style.opacity = '0';
+    setTimeout(() => {
+        document.body.style.transition = 'opacity 0.5s ease';
+        document.body.style.opacity = '1';
+    }, 100);
+});
+</script>
 </body>
 </html>
