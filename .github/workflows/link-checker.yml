@@ -1,0 +1,36 @@
+name: Link Checker
+
+on:
+  push:
+    branches: [ master ]
+  schedule:
+    - cron: '0 2 * * *'  # Her gün saat 02:00'da çalışır
+
+jobs:
+  link-check:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+    
+    - name: Install linkchecker
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y linkchecker
+    
+    - name: Check all links
+      run: |
+        echo "Checking all links on the website..."
+        linkchecker --check-extern --no-warnings --ignore-url="^mailto:" --ignore-url="^tel:" https://tlgselvi.github.io/poolsfilters
+    
+    - name: Generate link report
+      run: |
+        echo "Generating detailed link report..."
+        linkchecker --check-extern --no-warnings --ignore-url="^mailto:" --ignore-url="^tel:" --output=html --output-file=link-report.html https://tlgselvi.github.io/poolsfilters || true
+        
+    - name: Upload link report
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: link-report
+        path: link-report.html

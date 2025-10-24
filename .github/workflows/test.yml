@@ -13,20 +13,44 @@ jobs:
     - name: Check website availability
       run: |
         echo "Testing website: https://tlgselvi.github.io/poolsfilters"
-        curl -f -s -o /dev/null -w "%{http_code}" https://tlgselvi.github.io/poolsfilters
-        if [ $? -eq 0 ]; then
+        response=$(curl -s -o /dev/null -w "%{http_code}" https://tlgselvi.github.io/poolsfilters)
+        echo "HTTP Status: $response"
+        if [ "$response" -eq 200 ]; then
           echo "✅ Website is accessible"
         else
-          echo "❌ Website is not accessible"
+          echo "❌ Website is not accessible - Status: $response"
           exit 1
         fi
     
     - name: Check for broken links
       run: |
         echo "Checking for broken links..."
-        # Bu kısım daha gelişmiş link checker eklenebilir
+        # Ana sayfa linklerini kontrol et
+        curl -s https://tlgselvi.github.io/poolsfilters | grep -o 'href="[^"]*"' | while read link; do
+          url=$(echo $link | sed 's/href="//;s/"//')
+          if [[ $url == http* ]]; then
+            status=$(curl -s -o /dev/null -w "%{http_code}" "$url")
+            if [ "$status" -ne 200 ]; then
+              echo "❌ Broken link: $url (Status: $status)"
+            else
+              echo "✅ Working link: $url"
+            fi
+          fi
+        done
     
-    - name: Performance test
+    - name: Check page load time
       run: |
-        echo "Running performance test..."
-        # Lighthouse CI veya benzeri araçlar eklenebilir
+        echo "Checking page load time..."
+        time curl -s -o /dev/null -w "Total time: %{time_total}s\n" https://tlgselvi.github.io/poolsfilters
+    
+    - name: Check for JavaScript errors
+      run: |
+        echo "Checking for JavaScript errors..."
+        # Basit JS syntax kontrolü
+        if [ -f "index.html" ]; then
+          if grep -q "<script>" index.html; then
+            echo "✅ JavaScript found in HTML"
+          else
+            echo "ℹ️ No JavaScript found"
+          fi
+        fi

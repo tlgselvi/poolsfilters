@@ -1,0 +1,76 @@
+name: SEO & Performance Test
+
+on:
+  push:
+    branches: [ master ]
+  schedule:
+    - cron: '0 4 * * *'  # Her gün saat 04:00'da çalışır
+
+jobs:
+  seo-test:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+    
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y curl jq
+    
+    - name: Check HTML structure
+      run: |
+        echo "Checking HTML structure..."
+        if [ -f "index.html" ]; then
+          # Title tag kontrolü
+          if grep -q "<title>" index.html; then
+            echo "✅ Title tag found"
+          else
+            echo "❌ No title tag found"
+          fi
+          
+          # Meta description kontrolü
+          if grep -q 'name="description"' index.html; then
+            echo "✅ Meta description found"
+          else
+            echo "❌ No meta description found"
+          fi
+          
+          # Alt text kontrolü
+          alt_count=$(grep -c 'alt=' index.html || echo "0")
+          echo "Images with alt text: $alt_count"
+          
+          # Heading structure kontrolü
+          h1_count=$(grep -c '<h1' index.html || echo "0")
+          echo "H1 tags: $h1_count"
+        fi
+    
+    - name: Check page speed
+      run: |
+        echo "Checking page speed..."
+        curl -w "@-" -o /dev/null -s "https://tlgselvi.github.io/poolsfilters" <<< "
+        time_namelookup:  %{time_namelookup}\n
+        time_connect:     %{time_connect}\n
+        time_appconnect:  %{time_appconnect}\n
+        time_pretransfer: %{time_pretransfer}\n
+        time_redirect:    %{time_redirect}\n
+        time_starttransfer: %{time_starttransfer}\n
+        time_total:       %{time_total}\n
+        "
+    
+    - name: Check mobile responsiveness
+      run: |
+        echo "Checking mobile responsiveness..."
+        curl -s "https://tlgselvi.github.io/poolsfilters" | grep -q 'viewport' && echo "✅ Viewport meta tag found" || echo "❌ No viewport meta tag"
+    
+    - name: Check for security headers
+      run: |
+        echo "Checking security headers..."
+        headers=$(curl -I -s "https://tlgselvi.github.io/poolsfilters")
+        echo "$headers"
+        
+        if echo "$headers" | grep -q "X-Frame-Options"; then
+          echo "✅ X-Frame-Options header found"
+        else
+          echo "ℹ️ No X-Frame-Options header"
+        fi
