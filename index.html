@@ -98,14 +98,14 @@ Filters
 </font></td></tr>
 <tr><td bgcolor="#f1f1f1"><font face="Times New Roman,Helvetica" size="2">
 <!--clickMaint-->
-<a href="#cartridges">Cartridges</a><br>
-<a href="#clean">How to Clean Filters</a><br>
-<a href="#covers">Covers</a><br>
-<a href="#parts">Parts</a><br>
-<a href="#hayward">Hayward Filters</a><br>
-<a href="#cleaning">Filter Cleaning</a><br>
-<a href="#discount">Discount Filters</a><br>
-<a href="#jacuzzi">Jacuzzi Filter Discount</a><br>
+<a href="https://www.amerimerc.com/pool_supply/filters/cartridge_filters.asp" target="_blank">Cartridges</a><br>
+<a href="https://www.amerimerc.com/pool_supply/filters/cleaning_products.asp" target="_blank">How to Clean Filters</a><br>
+<a href="https://www.backyardcitypools.com/pool-pumps-filter-systems/Pool-Systems-AG.htm" target="_blank">Covers</a><br>
+<a href="https://www.amerimerc.com/pool_supply/filters/filter_parts.asp" target="_blank">Parts</a><br>
+<a href="https://www.amerimerc.com/pool_supply/filters/hayward_filters.asp" target="_blank">Hayward Filters</a><br>
+<a href="https://www.amerimerc.com/pool_supply/filters/cleaning_products.asp" target="_blank">Filter Cleaning</a><br>
+<a href="https://www.poolsupplydeals.com/Detail.bok?no=858" target="_blank">Discount Filters</a><br>
+<a href="https://www.amerimerc.com/pool_supply/filters/jacuzzi_filters.asp" target="_blank">Jacuzzi Filter Discount</a><br>
 <!--clickMainb-->
 <br>
 </font></td></tr>
@@ -403,8 +403,11 @@ document.addEventListener('DOMContentLoaded', function() {
                     block: 'start'
                 });
             } else {
-                // If target doesn't exist, show alert
-                alert('Bu sayfa henüz hazırlanmamış. Yakında eklenecek!');
+                // If target doesn't exist, scroll to top
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
             }
         });
     });
