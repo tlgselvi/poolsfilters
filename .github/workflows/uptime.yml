@@ -1,0 +1,19 @@
+name: Uptime Monitor
+
+on:
+  schedule:
+    - cron: '*/5 * * * *'  # Her 5 dakikada bir
+
+jobs:
+  uptime-check:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check website uptime
+      run: |
+        response=$(curl -s -o /dev/null -w "%{http_code}" https://tlgselvi.github.io/poolsfilters)
+        if [ $response -eq 200 ]; then
+          echo "✅ Website is UP - Status: $response"
+        else
+          echo "❌ Website is DOWN - Status: $response"
+          # Burada Slack, Discord veya email bildirimi gönderilebilir
+        fi

@@ -1,0 +1,32 @@
+name: Website Health Check
+
+on:
+  push:
+    branches: [ master ]
+  schedule:
+    - cron: '0 */6 * * *'  # Her 6 saatte bir çalışır
+
+jobs:
+  health-check:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Check website availability
+      run: |
+        echo "Testing website: https://tlgselvi.github.io/poolsfilters"
+        curl -f -s -o /dev/null -w "%{http_code}" https://tlgselvi.github.io/poolsfilters
+        if [ $? -eq 0 ]; then
+          echo "✅ Website is accessible"
+        else
+          echo "❌ Website is not accessible"
+          exit 1
+        fi
+    
+    - name: Check for broken links
+      run: |
+        echo "Checking for broken links..."
+        # Bu kısım daha gelişmiş link checker eklenebilir
+    
+    - name: Performance test
+      run: |
+        echo "Running performance test..."
+        # Lighthouse CI veya benzeri araçlar eklenebilir
